@@ -9,13 +9,10 @@ export default class Splash extends Component {
     componentWillMount() {
         firebase.auth().onAuthStateChanged((user) => {
             if (user) {
-                console.log(user.uid)
                 database.child(`Users/${user.uid}/`).once("value", (snapshoot) => {
                     let currentUser = snapshoot.val()
                     currentUser.uid = snapshoot.key;
-                    console.log(currentUser,"Maaz Ahmed")
                     AsyncStorage.setItem("currentUser", JSON.stringify(currentUser), () => {
-                        console.log(currentUser, "currentUser")
                         setTimeout(() => {
                             this.props.navigation.navigate("Dashboard")
                         }, 1000)

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View, TextInput, TouchableOpacity, AsyncStorage } from 'react-native';
+import { Platform, StyleSheet, Text, View, TextInput, TouchableOpacity, AsyncStorage, ActivityIndicator } from 'react-native';
 import firebase from "react-native-firebase"
 
 
@@ -18,7 +18,8 @@ export default class SignIn extends Component {
         super()
         this.state = {
             email: "",
-            password: ""
+            password: "",
+            isLoader: false
         }
     }
 
@@ -28,14 +29,19 @@ export default class SignIn extends Component {
             email, password,
         }
         if (password !== "" && email !== "") {
+            this.setState({
+                isLoader: true
+            })
             firebase.auth().signInWithEmailAndPassword(email, password)
                 .then((res) => {
                     database.child(`Users/${res.user._user.uid}/`).once("value", (snapshoot) => {
                         let currentUser = snapshoot.val()
                         currentUser.id = snapshoot.key
                         AsyncStorage.setItem("currentUser", JSON.stringify(currentUser), () => {
-                            console.log(currentUser, "currentUser")
                             setTimeout(() => {
+                                this.setState({
+                                    isLoader: false
+                                })
                                 this.props.navigation.navigate("Dashboard")
                             }, 2000)
                         })
@@ -44,6 +50,9 @@ export default class SignIn extends Component {
                 .catch((error) => {
                     var errorMessage = error.message;
                     alert(errorMessage)
+                    this.setState({
+                        isLoader: false
+                    })
                 })
         }
         else {
@@ -73,9 +82,12 @@ export default class SignIn extends Component {
                         style={[styles.TextInput, {}]} />
                 </View>
                 <View style={styles.buttonView} >
-                    <TouchableOpacity onPress={this.SignIn.bind(this)} activeOpacity={.5} style={styles.button} >
-                        <Text style={styles.buttonText} >SIGN UP</Text>
-                    </TouchableOpacity>
+                    {(this.state.isLoader) ?
+                        <ActivityIndicator size="large" color="#e91e8d" />
+                        :
+                        <TouchableOpacity onPress={this.SignIn.bind(this)} activeOpacity={.5} style={styles.button} >
+                            <Text style={styles.buttonText} >SIGN IN</Text>
+                        </TouchableOpacity>}
                 </View>
                 <TouchableOpacity
                     onPress={() => this.props.navigation.navigate("SignUp")}

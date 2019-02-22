@@ -51,16 +51,9 @@ export default class Dashboard extends Component {
 
 
     logoput() {
-        this.setState({
-            isUploadLoader: true
-        })
-        firebase.auth().signOut().then(() => {
-            AsyncStorage.clear('currentUser')
-            this.props.navigation.navigate("SignIn")
-
-        }).catch(() => {
-            console.log("Fail")
-        })
+        firebase.auth().signOut()
+        // AsyncStorage.clear('currentUser')
+        this.props.navigation.navigate("SignIn")
     }
 
 
@@ -68,7 +61,7 @@ export default class Dashboard extends Component {
     saveImage() {
         this.setState({
             modalVisible: false,
-            logoput
+            isUploadLoader:true
         })
         const storageRef = firebase.storage().ref('/');
         var file = this.state.imageURL.uri;
@@ -171,7 +164,8 @@ export default class Dashboard extends Component {
                     <TouchableOpacity
                         onPress={this.logoput.bind(this)}
                         activeOpacity={.5} style={styles.logUotbtn} >
-                        <Text style={{ fontSize: 17, color: "#fff", }} >{"<"}</Text>
+                        {/* <Text style={{ fontSize: 17, color: "#fff", }} >{"<"}</Text> */}
+                        <Image style={{height:20, width:20}} source={require("../../images/logout.png")} />
                     </TouchableOpacity >
                     <TouchableOpacity onPress={this.selectPhotoTapped.bind(this)} activeOpacity={.5} style={styles.addBtn} >
                         <Text style={{ fontSize: 17, color: "#fff", }} >+</Text>

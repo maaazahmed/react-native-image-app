@@ -26,27 +26,53 @@ export default class Dashboard extends Component {
     }
 
     async componentWillMount() {
-        AsyncStorage.getItem('currentUser').then((data) => {
-            const user = JSON.parse(data, "I am ...............")
-            console.log(user)
-            this.setState({
-                currentUser: user,
-            })
+        // AsyncStorage.getItem('currentUser').then((data) => {
+        //     const user = JSON.parse(data, "I am ...............")
+        //     console.log(user)
+        //     this.setState({
+        //         currentUser: user,
+        //     })
 
-            database.child(`Images/${user.uid}/`).on("value", (snapshot) => {
-                let arr = []
-                console.log(snapshot)
-                let obj = snapshot.val()
-                for (let key in obj) {
-                    arr.push({ ...obj[key], key })
-                }
-                this.setState({
-                    images: arr
+        //     database.child(`Images/${user.uid}/`).on("value", (snapshot) => {
+        //         let arr = []
+        //         console.log(snapshot)
+        //         let obj = snapshot.val()
+        //         for (let key in obj) {
+        //             arr.push({ ...obj[key], key })
+        //         }
+        //         this.setState({
+        //             images: arr
+        //         })
+        //     })
+        // }).catch((err) => {
+        //     console.log(err)
+        // })
+        firebase.auth().onAuthStateChanged((user) => {
+            if (user) {
+                database.child(`Users/${user.uid}/`).once("value", (snapshoot) => {
+                    let currentUser = snapshoot.val()
+                    currentUser.uid = snapshoot.key;
+                    this.setState({
+                        currentUser: currentUser
+                    })
+                    database.child(`Images/${user.uid}/`).on("value", (snapshot) => {
+                        let arr = []
+                        let obj = snapshot.val()
+                        for (let key in obj) {
+                            arr.push({ ...obj[key], key })
+                        }
+                        this.setState({
+                            images: arr
+                        })
+                    })
+
                 })
-            })
-        }).catch((err) => {
-            console.log(err)
+            }
         })
+    }
+
+    componentDidMount() {
+       
     }
 
 
@@ -54,6 +80,13 @@ export default class Dashboard extends Component {
         firebase.auth().signOut()
         // AsyncStorage.clear('currentUser')
         this.props.navigation.navigate("SignIn")
+        this.setState({
+            imageURL: {},
+            modalVisible: false,
+            isUploadLoader: false,
+            currentUser: {},
+            images: [],
+        })
     }
 
 
@@ -61,7 +94,7 @@ export default class Dashboard extends Component {
     saveImage() {
         this.setState({
             modalVisible: false,
-            isUploadLoader:true
+            isUploadLoader: true
         })
         const storageRef = firebase.storage().ref('/');
         var file = this.state.imageURL.uri;
@@ -165,7 +198,7 @@ export default class Dashboard extends Component {
                         onPress={this.logoput.bind(this)}
                         activeOpacity={.5} style={styles.logUotbtn} >
                         {/* <Text style={{ fontSize: 17, color: "#fff", }} >{"<"}</Text> */}
-                        <Image style={{height:20, width:20}} source={require("../../images/logout.png")} />
+                        <Image style={{ height: 20, width: 20 }} source={require("../../images/logout.png")} />
                     </TouchableOpacity >
                     <TouchableOpacity onPress={this.selectPhotoTapped.bind(this)} activeOpacity={.5} style={styles.addBtn} >
                         <Text style={{ fontSize: 17, color: "#fff", }} >+</Text>

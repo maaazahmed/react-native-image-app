@@ -12,11 +12,11 @@ export default class Splash extends Component {
                 database.child(`Users/${user.uid}/`).once("value", (snapshoot) => {
                     let currentUser = snapshoot.val()
                     currentUser.uid = snapshoot.key;
-                    AsyncStorage.setItem("currentUser", JSON.stringify(currentUser), () => {
+                    // AsyncStorage.setItem("currentUser", JSON.stringify(currentUser), () => {
                         setTimeout(() => {
                             this.props.navigation.navigate("Dashboard")
                         }, 1000)
-                    })
+                    // })
                 })
             }
             else {

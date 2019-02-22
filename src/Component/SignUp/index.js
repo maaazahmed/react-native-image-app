@@ -35,20 +35,12 @@ export default class SignUp extends Component {
                 .then((res) => {
                     database.child(`Users/${res.user._user.uid}`).set(user).then(() => {
                         user.uid = res.user._user.uid
-                        console.log(user, "------------------------")
-                        // database.child(`Users/${res.uid}/`).once("value", (snapshoot) => {
-                        //     let currentUser = snapshoot.val()
-                        //     currentUser.id = snapshoot.key
-                        //     })
-                        AsyncStorage.setItem("currentUser", JSON.stringify(user), () => {
-                            console.log(user)
                             setTimeout(() => {
                                 this.setState({
                                     isLoader: false
                                 })
                                 this.props.navigation.navigate("Dashboard")
                             }, 2000)
-                        })
                     })
                 }).catch((error) => {
                     var errorMessage = error.message;

@@ -36,16 +36,16 @@ export default class SignIn extends Component {
                 .then((res) => {
                     database.child(`Users/${res.user._user.uid}/`).once("value", (snapshoot) => {
                         let currentUser = snapshoot.val()
-                        currentUser.uid = snapshoot.key
-                        AsyncStorage.setItem("currentUser", JSON.stringify(currentUser), () => {
-                            console.log(currentUser, "currentUser")
+                        currentUser.uid = snapshoot.key;
+                        // AsyncStorage.setItem("currentUser", JSON.stringify(currentUser), () => {
+                        //     console.log(currentUser, "currentUser")
                             setTimeout(() => {
                                 this.setState({
                                     isLoader: false
                                 })
                                 this.props.navigation.navigate("Dashboard")
                             }, 2000)
-                        })
+                        // })
                     })
                 })
                 .catch((error) => {

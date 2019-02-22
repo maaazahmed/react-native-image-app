@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
+import { Platform, StyleSheet, Text, View, TextInput, TouchableOpacity, AsyncStorage } from 'react-native';
 import firebase from "react-native-firebase"
 
 
@@ -30,13 +30,16 @@ export default class SignIn extends Component {
         if (password !== "" && email !== "") {
             firebase.auth().signInWithEmailAndPassword(email, password)
                 .then((res) => {
-                    // database.child(`Users/${res.user._user.uid}/`).once("value", (snapshoot) => {
-                    //     let currentUser = snapshoot.val()
-                    //     currentUser.id = snapshoot.key
-                    //     setTimeout(() => {
-                            this.props.navigation.navigate("Dashboard")
-                    //     }, 1500)
-                    // })
+                    database.child(`Users/${res.user._user.uid}/`).once("value", (snapshoot) => {
+                        let currentUser = snapshoot.val()
+                        currentUser.id = snapshoot.key
+                        AsyncStorage.setItem("currentUser", JSON.stringify(currentUser), () => {
+                            console.log(currentUser, "currentUser")
+                            setTimeout(() => {
+                                this.props.navigation.navigate("Dashboard")
+                            }, 2000)
+                        })
+                    })
                 })
                 .catch((error) => {
                     var errorMessage = error.message;
@@ -63,6 +66,7 @@ export default class SignIn extends Component {
                 </View>
                 <View style={[styles.TextInputView, styles.marginTop]} >
                     <TextInput
+                        secureTextEntry={true}
                         placeholder="Password"
                         value={password}
                         onChangeText={(password) => this.setState({ password })}
@@ -74,8 +78,8 @@ export default class SignIn extends Component {
                     </TouchableOpacity>
                 </View>
                 <TouchableOpacity
-                onPress={()=>this.props.navigation.navigate("SignUp")}
-                 style={{ marginTop: 10 }} >
+                    onPress={() => this.props.navigation.navigate("SignUp")}
+                    style={{ marginTop: 10 }} >
                     <Text style={{ color: "#e91e8d", fontSize: 12 }} >Don't have an accunt !</Text>
                 </TouchableOpacity>
             </View>

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
+import { Platform, StyleSheet, Text, View, TextInput, TouchableOpacity,AsyncStorage } from 'react-native';
 import firebase from "react-native-firebase"
 
 
@@ -32,9 +32,18 @@ export default class SignUp extends Component {
             firebase.auth().createUserWithEmailAndPassword(email, password)
                 .then((res) => {
                     database.child(`Users/${res.user._user.uid}`).set(user).then(() => {
-                        setTimeout(() => {
-                            this.props.navigation.navigate("Dashboard")
-                        }, 1500)
+                        user.uid = res.user._user.uid
+                        console.log(user,"------------------------")
+                        // database.child(`Users/${res.uid}/`).once("value", (snapshoot) => {
+                        //     let currentUser = snapshoot.val()
+                        //     currentUser.id = snapshoot.key
+                        //     })
+                        AsyncStorage.setItem("currentUser", JSON.stringify(user), () => {
+                            console.log(user)
+                            setTimeout(() => {
+                                this.props.navigation.navigate("Dashboard")
+                            }, 2000)
+                        })
                     })
                 }).catch((error) => {
                     var errorMessage = error.message;
@@ -68,6 +77,7 @@ export default class SignUp extends Component {
                 </View>
                 <View style={[styles.TextInputView, styles.marginTop]} >
                     <TextInput
+                        secureTextEntry={true}
                         placeholder="Password"
                         value={password}
                         onChangeText={(password) => this.setState({ password })}

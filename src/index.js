@@ -8,7 +8,8 @@ import { createStackNavigator, createAppContainer } from "react-navigation";
 import {
   SignUp,
   SignIn,
-  Dashboard
+  Dashboard,
+  Splash
 } from "./Component/index"
 
 
@@ -67,16 +68,32 @@ const transitionConfig = () => {
 
 const AppNavigator = createStackNavigator({
   SignUp: {
-    screen: SignUp
+    screen: SignUp,
+    navigationOptions: {
+      headerLeft: null
+    },
   },
   SignIn: {
-    screen: SignIn
+    screen: SignIn,
+    navigationOptions: {
+      headerLeft: null
+    },
   },
   Dashboard: {
     screen: Dashboard,
+    navigationOptions: {
+      headerLeft: null
+    },
+  },
+  Splash: {
+    screen: Splash,
+    navigationOptions: {
+      header: null
+    },
+
   }
 }, {
-    initialRouteName: "SignIn",
+    initialRouteName: "Splash",
     transitionConfig,
   });
 

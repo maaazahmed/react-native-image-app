@@ -1,22 +1,23 @@
 import React, { Component } from "react";
-import { View, StyleSheet, AsyncStorage, ActivityIndicator } from "react-native";
+import {
+    View,
+    StyleSheet,
+    ActivityIndicator
+} from "react-native";
 import firebase from "react-native-firebase";
 
 
 const database = firebase.database().ref("/")
 export default class Splash extends Component {
-
     componentWillMount() {
         firebase.auth().onAuthStateChanged((user) => {
             if (user) {
                 database.child(`Users/${user.uid}/`).once("value", (snapshoot) => {
                     let currentUser = snapshoot.val()
                     currentUser.uid = snapshoot.key;
-                    // AsyncStorage.setItem("currentUser", JSON.stringify(currentUser), () => {
-                        setTimeout(() => {
-                            this.props.navigation.navigate("Dashboard")
-                        }, 1000)
-                    // })
+                    setTimeout(() => {
+                        this.props.navigation.navigate("Dashboard")
+                    }, 1000)
                 })
             }
             else {
@@ -26,7 +27,7 @@ export default class Splash extends Component {
             }
         })
 
-        
+
     }
     render() {
         return (

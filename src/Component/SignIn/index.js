@@ -1,8 +1,13 @@
 import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View, TextInput, TouchableOpacity, AsyncStorage, ActivityIndicator } from 'react-native';
+import {
+    StyleSheet,
+    Text,
+    View,
+    TextInput,
+    TouchableOpacity,
+    ActivityIndicator
+} from 'react-native';
 import firebase from "react-native-firebase"
-
-
 
 
 const database = firebase.database().ref()
@@ -13,7 +18,6 @@ export default class SignIn extends Component {
         headerTitleStyle: { color: '#fff', fontSize: 14 },
         headerTintColor: '#ffffff',
     }
-
     constructor() {
         super()
         this.state = {
@@ -25,9 +29,6 @@ export default class SignIn extends Component {
 
     SignIn() {
         const { email, password } = this.state
-        const user = {
-            email, password,
-        }
         if (password !== "" && email !== "") {
             this.setState({
                 isLoader: true
@@ -37,15 +38,12 @@ export default class SignIn extends Component {
                     database.child(`Users/${res.user._user.uid}/`).once("value", (snapshoot) => {
                         let currentUser = snapshoot.val()
                         currentUser.uid = snapshoot.key;
-                        // AsyncStorage.setItem("currentUser", JSON.stringify(currentUser), () => {
-                        //     console.log(currentUser, "currentUser")
-                            setTimeout(() => {
-                                this.setState({
-                                    isLoader: false
-                                })
-                                this.props.navigation.navigate("Dashboard")
-                            }, 2000)
-                        // })
+                        setTimeout(() => {
+                            this.setState({
+                                isLoader: false
+                            })
+                            this.props.navigation.navigate("Dashboard")
+                        }, 2000)
                     })
                 })
                 .catch((error) => {
@@ -57,7 +55,6 @@ export default class SignIn extends Component {
                 })
         }
         else {
-
             alert("All Feilds are required !")
         }
     }

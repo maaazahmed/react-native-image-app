@@ -1,5 +1,15 @@
 import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View, TouchableOpacity, ActivityIndicator, AsyncStorage, Modal, FlatList, Dimensions, Image } from 'react-native';
+import {
+    StyleSheet,
+    Text,
+    View,
+    TouchableOpacity,
+    ActivityIndicator,
+    Modal,
+    FlatList,
+    Dimensions,
+    Image
+} from 'react-native';
 const ImagePicker = require('react-native-image-picker');
 import firebase from "react-native-firebase"
 
@@ -25,28 +35,7 @@ export default class Dashboard extends Component {
         }
     }
 
-    async componentWillMount() {
-        // AsyncStorage.getItem('currentUser').then((data) => {
-        //     const user = JSON.parse(data, "I am ...............")
-        //     console.log(user)
-        //     this.setState({
-        //         currentUser: user,
-        //     })
-
-        //     database.child(`Images/${user.uid}/`).on("value", (snapshot) => {
-        //         let arr = []
-        //         console.log(snapshot)
-        //         let obj = snapshot.val()
-        //         for (let key in obj) {
-        //             arr.push({ ...obj[key], key })
-        //         }
-        //         this.setState({
-        //             images: arr
-        //         })
-        //     })
-        // }).catch((err) => {
-        //     console.log(err)
-        // })
+    componentWillMount() {
         firebase.auth().onAuthStateChanged((user) => {
             if (user) {
                 database.child(`Users/${user.uid}/`).once("value", (snapshoot) => {
@@ -72,13 +61,12 @@ export default class Dashboard extends Component {
     }
 
     componentDidMount() {
-       
+
     }
 
 
     logoput() {
         firebase.auth().signOut()
-        // AsyncStorage.clear('currentUser')
         this.props.navigation.navigate("SignIn")
         this.setState({
             imageURL: {},
@@ -121,7 +109,6 @@ export default class Dashboard extends Component {
                 const obj = {
                     uri: snapshot.downloadURL
                 }
-                console.log(obj, "00000000000000000000000000")
                 database.child(`Images/${this.state.currentUser.uid}/`).push(obj)
                 this.setState({
                     isUploadLoader: false,
@@ -141,8 +128,6 @@ export default class Dashboard extends Component {
             }
         };
 
-
-
         ImagePicker.showImagePicker(options, (response) => {
             console.log('Response = ', response);
 
@@ -157,19 +142,15 @@ export default class Dashboard extends Component {
             }
             else {
                 let source = { uri: response.uri };
-                console.log(source)
                 this.setState({
                     imageURL: source,
                     modalVisible: true
                 });
-                // database.child()
-
             }
         });
     }
 
     render() {
-        console.log(this.state.images)
         return (
             (this.state.isUploadLoader) ?
                 <View style={styles.loaderContainer} >
@@ -197,7 +178,6 @@ export default class Dashboard extends Component {
                     <TouchableOpacity
                         onPress={this.logoput.bind(this)}
                         activeOpacity={.5} style={styles.logUotbtn} >
-                        {/* <Text style={{ fontSize: 17, color: "#fff", }} >{"<"}</Text> */}
                         <Image style={{ height: 20, width: 20 }} source={require("../../images/logout.png")} />
                     </TouchableOpacity >
                     <TouchableOpacity onPress={this.selectPhotoTapped.bind(this)} activeOpacity={.5} style={styles.addBtn} >
@@ -218,7 +198,7 @@ export default class Dashboard extends Component {
                                         <Text style={styles.modalbtnstext} >Save</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity onPress={() => { this.setState({ modalVisible: false, imageURL: {} }) }} >
-                                        <Text style={styles.modalbtnstext}>Cancele</Text>
+                                        <Text style={styles.modalbtnstext}>Cancel</Text>
                                     </TouchableOpacity>
                                 </View>
                             </View>
@@ -232,7 +212,6 @@ export default class Dashboard extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        // justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#fff',
     },

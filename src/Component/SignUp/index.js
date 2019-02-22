@@ -1,7 +1,13 @@
 import React, { Component } from 'react';
-import {  StyleSheet, Text, View, TextInput, TouchableOpacity, AsyncStorage, ActivityIndicator } from 'react-native';
+import {
+    StyleSheet,
+    Text,
+    View,
+    TextInput,
+    TouchableOpacity,
+    ActivityIndicator
+} from 'react-native';
 import firebase from "react-native-firebase"
-
 
 
 
@@ -35,12 +41,12 @@ export default class SignUp extends Component {
                 .then((res) => {
                     database.child(`Users/${res.user._user.uid}`).set(user).then(() => {
                         user.uid = res.user._user.uid
-                            setTimeout(() => {
-                                this.setState({
-                                    isLoader: false
-                                })
-                                this.props.navigation.navigate("Dashboard")
-                            }, 2000)
+                        setTimeout(() => {
+                            this.setState({
+                                isLoader: false
+                            })
+                            this.props.navigation.navigate("Dashboard")
+                        }, 2000)
                     })
                 }).catch((error) => {
                     var errorMessage = error.message;
@@ -51,7 +57,6 @@ export default class SignUp extends Component {
                 })
         }
         else {
-
             alert("All Feilds are required !")
         }
     }
@@ -88,7 +93,7 @@ export default class SignUp extends Component {
                         <ActivityIndicator size="large" color="#e91e8d" />
                         :
                         <TouchableOpacity onPress={this.createAccount.bind(this)} activeOpacity={.5} style={styles.button} >
-                            <Text style={styles.buttonText} >SIGN IN</Text>
+                            <Text style={styles.buttonText} >SIGN UP</Text>
                         </TouchableOpacity>}
                 </View>
                 <TouchableOpacity onPress={() => this.props.navigation.navigate("SignIn")} style={{ marginTop: 10 }} >

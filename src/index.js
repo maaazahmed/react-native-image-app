@@ -76,7 +76,7 @@ const AppNavigator = createStackNavigator({
     screen: Dashboard,
   }
 }, {
-    initialRouteName: "Dashboard",
+    initialRouteName: "SignIn",
     transitionConfig,
   });
 

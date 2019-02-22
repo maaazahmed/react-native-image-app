@@ -31,9 +31,11 @@ export default class SignUp extends Component {
         if (username !== "" && password !== "" && email !== "") {
             firebase.auth().createUserWithEmailAndPassword(email, password)
                 .then((res) => {
-                    setTimeout(() => {
-                        this.props.navigation.navigate("Dashboard")
-                    }, 1500)
+                    database.child(`Users/${res.user._user.uid}`).set(user).then(() => {
+                        setTimeout(() => {
+                            this.props.navigation.navigate("Dashboard")
+                        }, 1500)
+                    })
                 }).catch((error) => {
                     var errorMessage = error.message;
                     alert(errorMessage)

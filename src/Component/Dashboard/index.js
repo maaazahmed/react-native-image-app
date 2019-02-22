@@ -128,7 +128,7 @@ export default class Dashboard extends Component {
         console.log(this.state.images)
         return (
             <View style={styles.container}>
-                <View style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "center", }} >
+                <View style={styles.FlatListContainer} >
                     <FlatList
                         numColumns={2}
                         style={{}} data={this.state.images}
@@ -146,12 +146,12 @@ export default class Dashboard extends Component {
                         keyExtractor={(item) => item.key}
                     />
                 </View>
-                <TouchableOpacity 
-                onPress={()=>this.props.navigation.navigate("SignIn")}
-                activeOpacity={.5} style={{
-                    position: "absolute",
-                    height: 60, width: 60, backgroundColor: "#e91e8d", bottom: 20, left: 20, borderRadius: 1000, justifyContent: "center", alignItems: "center", elevation: 5
-                }} >
+                <TouchableOpacity
+                    onPress={() => this.props.navigation.navigate("SignIn")}
+                    activeOpacity={.5} style={{
+                        position: "absolute",
+                        height: 60, width: 60, backgroundColor: "#e91e8d", bottom: 20, left: 20, borderRadius: 1000, justifyContent: "center", alignItems: "center", elevation: 5
+                    }} >
                     <Text style={{ fontSize: 17, color: "#fff", }} >{"<"}</Text>
                 </TouchableOpacity >
 
@@ -195,5 +195,10 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#fff',
     },
+    FlatListContainer: {
+        flexDirection: "row",
+        flexWrap: "wrap",
+        justifyContent: "center",
+    }
 
 });

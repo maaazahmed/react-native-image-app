@@ -26,10 +26,8 @@ export default class Dashboard extends Component {
     }
 
     async componentWillMount() {
-      
-
         AsyncStorage.getItem('currentUser').then((data) => {
-            const user = JSON.parse(data,"")
+            const user = JSON.parse(data, "I am ...............")
             console.log(user)
             this.setState({
                 currentUser: user,
@@ -52,10 +50,15 @@ export default class Dashboard extends Component {
     }
 
 
-    logoput(){
-        firebase.auth().signOut().then(()=>{
+    logoput() {
+        this.setState({
+            isUploadLoader: true
+        })
+        firebase.auth().signOut().then(() => {
+            AsyncStorage.clear('currentUser')
             this.props.navigation.navigate("SignIn")
-        }).catch(()=>{
+
+        }).catch(() => {
             console.log("Fail")
         })
     }
@@ -65,13 +68,13 @@ export default class Dashboard extends Component {
     saveImage() {
         this.setState({
             modalVisible: false,
-            isUploadLoader: true
+            logoput
         })
         const storageRef = firebase.storage().ref('/');
         var file = this.state.imageURL.uri;
         var uploadTask = storageRef.child(`Images/${this.state.currentUser.uid}/${new Date()}/`).put(file);
         uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
-             (snapshot) => {
+            (snapshot) => {
                 var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
                 switch (snapshot.state) {
                     case firebase.storage.TaskState.PAUSED:
@@ -79,7 +82,7 @@ export default class Dashboard extends Component {
                     case firebase.storage.TaskState.RUNNING:
                         break;
                 }
-            },  (error) => {
+            }, (error) => {
                 switch (error.code) {
                     case 'storage/unauthorized':
                         break;
@@ -92,11 +95,11 @@ export default class Dashboard extends Component {
                 const obj = {
                     uri: snapshot.downloadURL
                 }
-                console.log(obj,"00000000000000000000000000")
+                console.log(obj, "00000000000000000000000000")
                 database.child(`Images/${this.state.currentUser.uid}/`).push(obj)
                 this.setState({
                     isUploadLoader: false,
-                    imageURL:{}
+                    imageURL: {}
                 })
             });
     }
@@ -166,7 +169,7 @@ export default class Dashboard extends Component {
                         />
                     </View>
                     <TouchableOpacity
-                        onPress={() => this.props.navigation.navigate("SignIn")}
+                        onPress={this.logoput.bind(this)}
                         activeOpacity={.5} style={styles.logUotbtn} >
                         <Text style={{ fontSize: 17, color: "#fff", }} >{"<"}</Text>
                     </TouchableOpacity >
